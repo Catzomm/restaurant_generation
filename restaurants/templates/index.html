@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Выбор обеда</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Куда пойти поесcть?</h1>
+      <div class="block_filter">
+        <label for="filter_cuisine">Кухня</label>
+        <select id="filter_cuisine" name="filter_cuisine">
+          <option value="All" selected>Все кухни</option>
+          <option value="Русская">Русская</option>
+          <option value="Азиатская">Азиатская</option>
+          <option value="Итальянская">Итальянская</option>
+          <option value="Американская">Американская</option>
+          <option value="Мексиканская">Мексиканская</option>
+        </select>
+      </div>
+      <div class="block_filter">
+        <label for="filter_average_check">Средний чек</label>
+        <select id="filter_average_check" name="filter_average_check">
+          <option value="0 0" selected>Любая сумма</option>
+          <option value="0 350">До 350</option>
+          <option value="350 500">От 350 до 500</option>
+          <option value="500 0">от 500</option>
+        </select>
+      </div>
+      <div class="block_filter">
+        <label for="filter_lunch_price">Стоимость комплексного обеда</label>
+        <select id="filter_lunch_price" name="filter_lunch_price">
+          <option value="0 0" selected>Любая сумма</option>
+          <option value="0 250">До 250</option>
+          <option value="250 350">От 250 до 350</option>
+          <option value="350 0">от 350</option>
+        </select>
+      </div>
+      <button class="eat-btn" id="eatButton">Где поесть?</button>
+      <div id="restaurantInfo" class="restaurant-info" style="display: none">
+        <h2 id="restaurantName"></h2>
+        <p>Средний чек: <span id="averageCheck"></span> ₽</p>
+        <p>Комплексный обед: <span id="lunchPrice"></span> ₽</p>
+        <p>Кухня: <span id="cuisine"></span></p>
+        <p>Адрес: <span id="address"></span></p>
+      </div>
+
+      <div id="notRestaurantInfo" class="not-restaurant-info" style="display: none">
+        <h2 id="message"></h2>
+      </div>
+    </div>
+
+    <script>
+      const filterCuisine = document.getElementById('filter_cuisine');
+      const filterAverageCheck = document.getElementById('filter_average_check');
+      const filterLunchPrice = document.getElementById('filter_lunch_price');
+      filter = {
+        'cuisine': filterCuisine.value,
+        'averageCheck': filterAverageCheck.value.split(" ").map(Number),
+        'lunchPrice': filterLunchPrice.value.split(" ").map(Number),
+      }
+
+      document
+        .getElementById("eatButton")
+        .addEventListener("click", async () => {
+          filter = {
+            'cuisine': filterCuisine.value,
+            'averageCheck': filterAverageCheck.value.split(" ").map(Number),
+            'lunchPrice': filterLunchPrice.value.split(" ").map(Number),
+          }
+          const response = await fetch("/api/random-restaurant/", {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(filter)
+          });
+          const data = await response.json();
+
+          if (Object.keys(data)[0] !== "message") {
+            document.getElementById("notRestaurantInfo").style.display = "none";
+            document.getElementById("restaurantInfo").style.display = "block";
+            document.getElementById("restaurantName").textContent = data.name;
+            document.getElementById("averageCheck").textContent = data.average_check;
+            document.getElementById("lunchPrice").textContent = data.lunch_price;
+            document.getElementById("cuisine").textContent = data.cuisine;
+            document.getElementById("address").textContent = data.address;
+          } else {
+            document.getElementById("notRestaurantInfo").style.display = "block";
+            document.getElementById("restaurantInfo").style.display = "none";
+            document.getElementById("message").textContent = data.message;
+          }
+          
+        });
+
+    </script>
+  </body>
+</html>
