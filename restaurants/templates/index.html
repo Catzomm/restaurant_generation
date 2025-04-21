@@ -15,9 +15,9 @@
           <option value="All" selected>Все кухни</option>
           <option value="Русская">Русская</option>
           <option value="Азиатская">Азиатская</option>
-          <option value="Итальянская">Итальянская</option>
-          <option value="Американская">Американская</option>
-          <option value="Мексиканская">Мексиканская</option>
+          <option value="Европейская">Европейская</option>
+          <option value="Восточная">Восточная</option>
+          <option value="Фастфуд">Фастфуд</option>
         </select>
       </div>
       <div class="block_filter">
@@ -43,16 +43,51 @@
         <h2 id="restaurantName"></h2>
         <p>Средний чек: <span id="averageCheck"></span> ₽</p>
         <p>Комплексный обед: <span id="lunchPrice"></span> ₽</p>
+        <p>Состав комплексного обеда: <span id="lunchComposition"></span></p>
         <p>Кухня: <span id="cuisine"></span></p>
         <p>Адрес: <span id="address"></span></p>
+      </div>
+
+      <div id="feedback_globl" style="display: none">
+        <h2 id="restaurantNameReview" class="restaurantNameReview"></h2>
+        <div class="feedback_block">
+          <div class="feedback_block_1">
+            <span id="name1" class="name"></span>
+            <span id="raiting1" class="raiting"></span>
+          </div>
+          <span id="feedback1" class="feedback"></span>
+        </div>
+
+        <div class="feedback_block">
+          <div class="feedback_block_1">
+            <span id="name2" class="name"></span>
+            <span id="raiting2" class="raiting"></span>
+          </div>
+          <span id="feedback2" class="feedback"></span>
+        </div>
+
+        <div class="feedback_block">
+          <div class="feedback_block_1">
+            <span id="name3" class="name"></span>
+            <span id="raiting3" class="raiting"></span>
+          </div>
+          <span id="feedback3" class="feedback"></span>
+        </div>
       </div>
 
       <div id="notRestaurantInfo" class="not-restaurant-info" style="display: none">
         <h2 id="message"></h2>
       </div>
+
+      <div class="reviews-container" id="reviews"></div>
     </div>
 
     <script>
+
+    function renderStars(rating) {
+      return "★".repeat(rating) + "☆".repeat(5 - rating);
+    }
+
       const filterCuisine = document.getElementById('filter_cuisine');
       const filterAverageCheck = document.getElementById('filter_average_check');
       const filterLunchPrice = document.getElementById('filter_lunch_price');
@@ -85,11 +120,27 @@
             document.getElementById("restaurantName").textContent = data.name;
             document.getElementById("averageCheck").textContent = data.average_check;
             document.getElementById("lunchPrice").textContent = data.lunch_price;
+            document.getElementById("lunchComposition").textContent = data.lunch_composition;
             document.getElementById("cuisine").textContent = data.cuisine;
             document.getElementById("address").textContent = data.address;
+
+            document.getElementById("feedback_globl").style.display = "block";
+            document.getElementById("restaurantNameReview").textContent = data.nameReview;
+            document.getElementById("name1").textContent = data.name1;
+            document.getElementById("raiting1").textContent = renderStars(data.raiting1);
+            document.getElementById("feedback1").textContent = data.feedback1;
+
+            document.getElementById("name2").textContent = data.name2;
+            document.getElementById("raiting2").textContent = renderStars(data.raiting2);
+            document.getElementById("feedback2").textContent = data.feedback2;
+
+            document.getElementById("name3").textContent = data.name3;
+            document.getElementById("raiting3").textContent = renderStars(data.raiting3);
+            document.getElementById("feedback3").textContent = data.feedback3;
           } else {
             document.getElementById("notRestaurantInfo").style.display = "block";
             document.getElementById("restaurantInfo").style.display = "none";
+            document.getElementById("feedback_globl").style.display = "none";
             document.getElementById("message").textContent = data.message;
           }
           

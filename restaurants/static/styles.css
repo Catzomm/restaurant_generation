@@ -21,7 +21,6 @@ body {
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
   max-width: 600px;
   width: 90%;
   gap: 1rem;
@@ -30,6 +29,7 @@ body {
 h1 {
   color: #333;
   font-size: 2.5rem;
+  text-align: center;
 }
 
 .eat-btn {
@@ -100,4 +100,45 @@ select {
 
 option {
   padding: 10px;
+}
+
+.restaurantNameReview {
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.feedback_block {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 1.5rem;
+}
+
+.feedback_block_1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.raiting {
+  color: #f4a825;
+  font-size: 20px;
+}
+
+.name {
+  font-weight: bold;
+  text-align: left;
+}
+
+.feedback {
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.reviews-container {
+  text-align: center;
 }

@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import sqlite3
 import random
 import json
+from pprint import pprint
 
 def index(request):
     return render(request, 'index.html')
@@ -43,10 +44,11 @@ def filtered_restaurants(filters):
 @csrf_exempt
 def get_random_restaurant(request):
     # Подключаемся к базе данных
-    conn = sqlite3.connect('db.sqlite3')
+    conn = sqlite3.connect('restaurant_db_fully_rounded.sqlite3')
     cursor = conn.cursor()
     data = json.loads(request.body)
     filtered_restaurants(data)
+
 
     # Получаем рестораны по фильтрации
     try:
@@ -60,13 +62,36 @@ def get_random_restaurant(request):
         # Выбираем случайный ресторан
         restaurant = random.choice(restaurants)
         
+        try:
+            cursor.execute(f'SELECT * FROM set_lunch WHERE restaurant_id = {restaurant[0]}')
+            lunch_composition = cursor.fetchall()[0][3]
+        except Exception as e:
+            print("Ошибка:", e)
+
+        try:
+            cursor.execute(f'SELECT * FROM restaurant_review WHERE restaurant_id = {restaurant[0]}')
+            reviews = cursor.fetchall()
+        except Exception as e:
+            print("Ошибка:", e)
+        
         # Формируем ответ
         response = {
             'name': restaurant[1],
             'average_check': restaurant[2],
             'lunch_price': restaurant[3],
             'cuisine': restaurant[4],
-            'address': restaurant[5]
+            'address': restaurant[5],
+            'lunch_composition': lunch_composition,
+            'nameReview': f'Отзывы на ресторан {restaurant[1]}',
+            'name1': reviews[0][2],
+            'raiting1': reviews[0][3],
+            'feedback1': reviews[0][4],
+            'name2': reviews[1][2],
+            'raiting2': reviews[1][3],
+            'feedback2': reviews[1][4],
+            'name3': reviews[2][2],
+            'raiting3': reviews[2][3],
+            'feedback3': reviews[2][4],
         }
     else:
         response = {'message': 'Нет доступных ресторанов'}
