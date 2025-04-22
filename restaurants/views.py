@@ -44,7 +44,7 @@ def filtered_restaurants(filters):
 @csrf_exempt
 def get_random_restaurant(request):
     # Подключаемся к базе данных
-    conn = sqlite3.connect('restaurant_db_fully_rounded.sqlite3')
+    conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
     data = json.loads(request.body)
     filtered_restaurants(data)
